@@ -13,7 +13,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -31,22 +31,40 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
         
-        .youtube-icon {
+        .shorts-icon {
             width: 80px;
             height: 80px;
             margin: 0 auto 20px;
-            background: #FF0000;
-            border-radius: 50%;
+            background: linear-gradient(135deg, #FF0000 0%, #FF4444 100%);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             animation: pulse 2s infinite;
+            position: relative;
+            overflow: hidden;
         }
         
-        .youtube-icon svg {
-            width: 50px;
-            height: 50px;
+        .shorts-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%); }
+            100% { transform: translateX(100%) translateY(100%); }
+        }
+        
+        .shorts-icon svg {
+            width: 45px;
+            height: 45px;
             fill: white;
+            position: relative;
+            z-index: 1;
         }
         
         @keyframes pulse {
@@ -64,10 +82,16 @@
             margin-bottom: 10px;
         }
         
-        .post-info {
-            color: #666;
-            font-size: 16px;
+        .shorts-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
             margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(255, 0, 0, 0.3);
         }
         
         .btn {
@@ -139,14 +163,14 @@
 </head>
 <body>
     <div class="container">
-        <div class="youtube-icon">
+        <div class="shorts-icon">
             <svg viewBox="0 0 24 24">
-                <path d="M10,16.5V7.5L16,12M20,4.4C19.4,4.2 15.7,4 12,4C8.3,4 4.6,4.19 4,4.38C2.44,4.9 2,8.4 2,12C2,15.59 2.44,19.1 4,19.61C4.6,19.81 8.3,20 12,20C15.7,20 19.4,19.81 20,19.61C21.56,19.1 22,15.59 22,12C22,8.4 21.56,4.91 20,4.4Z" />
+                <path d="M10,8.64L15.27,12L10,15.36V8.64M8,5V19L19,12L8,5Z" />
             </svg>
         </div>
         
         <h1>Opening YouTube Shorts</h1>
-        <p class="post-info">🎬 Short Video</p>
+        <span class="shorts-badge">🎬 Short Video</span>
         
         <div id="loading" class="hidden">
             <div class="loader"></div>
@@ -154,11 +178,11 @@
         </div>
         
         <div id="buttons">
-            <a href="vnd.youtube://youtube.com/shorts/ZyzTb5TI1mU" class="btn btn-primary" id="appLink">
+            <a href="vnd.youtube://youtube.com/shorts/FDINXyNcfBY" class="btn btn-primary" id="appLink">
                 📱 Open in YouTube App
             </a>
             
-            <a href="https://youtube.com/shorts/ZyzTb5TI1mU?si=3BLZtH1RQ8Jb_n3V" class="btn btn-secondary" target="_blank" id="browserLink">
+            <a href="https://youtube.com/shorts/FDINXyNcfBY?si=iRYLAD6J7uwCJrbI" class="btn btn-secondary" target="_blank" id="browserLink">
                 🌐 Open in Browser
             </a>
         </div>
@@ -180,9 +204,9 @@
             setTimeout(function() {
                 // Try multiple deep link formats for better compatibility
                 const deepLinks = [
-                    'vnd.youtube://youtube.com/shorts/ZyzTb5TI1mU',
-                    'youtube://youtube.com/shorts/ZyzTb5TI1mU',
-                    'https://youtube.com/shorts/ZyzTb5TI1mU?si=3BLZtH1RQ8Jb_n3V'
+                    'vnd.youtube://youtube.com/shorts/FDINXyNcfBY',
+                    'youtube://youtube.com/shorts/FDINXyNcfBY',
+                    'https://youtube.com/shorts/FDINXyNcfBY?si=iRYLAD6J7uwCJrbI'
                 ];
                 
                 // Create a hidden iframe to attempt the deep link
@@ -207,7 +231,7 @@
             document.getElementById('buttons').classList.add('hidden');
             
             // Try to open the app
-            window.location.href = 'vnd.youtube://youtube.com/shorts/ZyzTb5TI1mU';
+            window.location.href = 'vnd.youtube://youtube.com/shorts/FDINXyNcfBY';
             
             // Fallback: if app doesn't open in 2 seconds, show buttons again and try browser
             setTimeout(function() {
@@ -215,7 +239,7 @@
                 document.getElementById('buttons').classList.remove('hidden');
                 
                 // Fallback to browser
-                window.open('https://youtube.com/shorts/ZyzTb5TI1mU?si=3BLZtH1RQ8Jb_n3V', '_blank');
+                window.open('https://youtube.com/shorts/FDINXyNcfBY?si=iRYLAD6J7uwCJrbI', '_blank');
             }, 2000);
         });
         
