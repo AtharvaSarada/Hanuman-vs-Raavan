@@ -3,362 +3,411 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KaalAurKatha — Opening YouTube...</title>
+    <title>Watch This! 🔥</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --red: #FF0000;
+            --dark: #0a0a0a;
+            --card: #141414;
+            --text: #ffffff;
+            --muted: #888;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #1a0000 0%, #4a0000 50%, #FF0000 100%);
+            background: var(--dark);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 24px;
-            padding: 40px 28px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
-        }
-
-        .channel-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #8B0000 0%, #FF0000 100%);
-            color: white;
-            padding: 6px 18px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 12px rgba(255, 0, 0, 0.35);
-        }
-
-        .thumbnail-wrapper {
-            width: 100%;
-            aspect-ratio: 9/16;
-            max-height: 220px;
-            margin: 0 auto 20px;
-            border-radius: 16px;
+            font-family: 'DM Sans', sans-serif;
             overflow: hidden;
-            background: linear-gradient(135deg, #1a0000, #3d0000);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
-            box-shadow: 0 8px 30px rgba(255, 0, 0, 0.25);
         }
 
-        .thumbnail-inner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 20px;
+        /* Animated background grid */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,0,0,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,0,0,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 8s linear infinite;
+            z-index: 0;
+        }
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(40px); }
         }
 
-        .thumbnail-icon {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 0, 0, 0.85);
+        /* Floating blobs */
+        .blob {
+            position: fixed;
             border-radius: 50%;
-            display: flex;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: 0;
+            animation: blobFloat 6s ease-in-out infinite alternate;
+        }
+        .blob-1 { width: 400px; height: 400px; background: var(--red); top: -100px; left: -100px; animation-delay: 0s; }
+        .blob-2 { width: 300px; height: 300px; background: #ff6600; bottom: -80px; right: -80px; animation-delay: -3s; }
+        @keyframes blobFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 20px) scale(1.1); }
+        }
+
+        /* Sparks / particles */
+        .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: particleFly linear infinite;
+            opacity: 0;
+        }
+        @keyframes particleFly {
+            0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 1; }
+            100% { transform: translateY(-10vh) translateX(var(--dx)); opacity: 0; }
+        }
+
+        /* Main card */
+        .card {
+            position: relative;
+            z-index: 10;
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 28px;
+            padding: 44px 36px 40px;
+            max-width: 420px;
+            width: calc(100% - 32px);
+            text-align: center;
+            box-shadow: 0 0 0 1px rgba(255,0,0,0.1), 0 40px 80px rgba(0,0,0,0.6);
+            animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+        }
+        @keyframes cardIn {
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Pulsing ring around icon */
+        .icon-wrap {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 28px;
+        }
+        .ring {
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 2px solid var(--red);
+            animation: ringPulse 2s ease-out infinite;
+            opacity: 0;
+        }
+        .ring:nth-child(2) { animation-delay: 0.7s; }
+        @keyframes ringPulse {
+            0%   { transform: scale(0.9); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .yt-circle {
+            width: 100px; height: 100px;
+            background: var(--red);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; z-index: 1;
+            animation: iconBeat 1.8s ease-in-out infinite;
+        }
+        @keyframes iconBeat {
+            0%,100% { transform: scale(1); }
+            50%      { transform: scale(1.08); }
+        }
+        .yt-circle svg { width: 54px; height: 54px; fill: white; }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            animation: pulse 2s infinite;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+            gap: 6px;
+            background: rgba(255,0,0,0.12);
+            border: 1px solid rgba(255,0,0,0.3);
+            color: #ff6060;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+        }
+        .badge-dot {
+            width: 6px; height: 6px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: dotBlink 1.2s ease-in-out infinite;
+        }
+        @keyframes dotBlink {
+            0%,100% { opacity: 1; } 50% { opacity: 0.2; }
         }
 
-        .thumbnail-icon svg {
-            width: 28px;
-            height: 28px;
-            fill: white;
-            margin-left: 4px;
-        }
-
-        .thumbnail-title {
-            color: #FFD700;
-            font-size: 15px;
-            font-weight: 800;
-            text-align: center;
-            letter-spacing: 0.5px;
-            line-height: 1.4;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-        }
-
-        .thumbnail-sub {
-            color: rgba(255,255,255,0.75);
-            font-size: 12px;
-            font-weight: 500;
-            text-align: center;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,0,0,0.5); }
-            50% { transform: scale(1.08); box-shadow: 0 0 40px rgba(255,0,0,0.8); }
-        }
-
+        /* Headline */
         h1 {
-            color: #1a1a1a;
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            line-height: 1.3;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 48px;
+            line-height: 1;
+            color: var(--text);
+            letter-spacing: 0.02em;
+            margin-bottom: 8px;
         }
+        h1 span { color: var(--red); }
 
         .subtitle {
-            color: #666;
-            font-size: 13px;
-            margin-bottom: 24px;
-            line-height: 1.5;
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 36px;
+            line-height: 1.6;
         }
 
+        /* Countdown bar */
+        .countdown-wrap {
+            margin-bottom: 28px;
+        }
+        .countdown-label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .bar-track {
+            height: 4px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6060, var(--red));
+            border-radius: 4px;
+            width: 100%;
+            transform-origin: left;
+            animation: barDrain 3s linear forwards;
+        }
+        @keyframes barDrain {
+            from { transform: scaleX(1); }
+            to   { transform: scaleX(0); }
+        }
+
+        /* Buttons */
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             width: 100%;
-            padding: 16px;
-            margin: 10px 0;
+            padding: 17px 20px;
             border: none;
             border-radius: 14px;
-            font-size: 15px;
-            font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
             cursor: pointer;
             text-decoration: none;
-            transition: transform 0.15s, box-shadow 0.15s;
-            letter-spacing: 0.2px;
+            transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+            margin-bottom: 12px;
         }
-
-        .btn:active {
-            transform: scale(0.97);
-        }
+        .btn:active { transform: scale(0.97) !important; }
 
         .btn-primary {
-            background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%);
+            background: var(--red);
             color: white;
-            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.35);
+            box-shadow: 0 8px 30px rgba(255,0,0,0.35);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(255,0,0,0.5);
         }
 
-        .btn-primary:hover {
-            box-shadow: 0 6px 28px rgba(255, 0, 0, 0.5);
+        .btn-ghost {
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.09);
             transform: translateY(-1px);
         }
 
-        .btn-secondary {
-            background: #f4f4f4;
-            color: #333;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        /* Emoji bounce on btn */
+        .btn-emoji { display: inline-block; animation: emojiBounce 0.8s ease-in-out infinite alternate; }
+        @keyframes emojiBounce {
+            from { transform: translateY(0); }
+            to   { transform: translateY(-3px); }
         }
 
-        .btn-secondary:hover {
-            background: #ebebeb;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 6px 0;
-            color: #bbb;
-            font-size: 12px;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #e5e5e5;
-        }
-
-        .info-box {
-            margin-top: 20px;
-            padding: 14px 16px;
-            background: #fff8e1;
+        /* Instagram tip */
+        .tip {
+            margin-top: 28px;
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
             border-radius: 12px;
-            border-left: 4px solid #FFD700;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.7;
             text-align: left;
         }
+        .tip strong { color: rgba(255,255,255,0.7); }
 
-        .info-box p {
-            font-size: 13px;
-            color: #555;
-            line-height: 1.6;
-        }
-
-        .info-box strong {
-            color: #333;
-            display: block;
-            margin-bottom: 4px;
-            font-size: 13px;
-        }
-
-        .loader-wrap {
+        /* Opening state overlay */
+        .opening-state {
             display: none;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
-            padding: 10px 0 20px;
+            gap: 16px;
+            padding: 20px 0;
         }
-
-        .loader {
-            width: 42px;
-            height: 42px;
-            border: 4px solid #f0f0f0;
-            border-top: 4px solid #FF0000;
+        .spinner {
+            width: 48px; height: 48px;
+            border: 3px solid rgba(255,0,0,0.2);
+            border-top: 3px solid var(--red);
             border-radius: 50%;
-            animation: spin 0.9s linear infinite;
+            animation: spin 0.7s linear infinite;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loader-text {
-            color: #888;
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .opening-text {
+            color: rgba(255,255,255,0.6);
             font-size: 14px;
+            font-weight: 600;
         }
 
-        .footer {
-            margin-top: 22px;
-            font-size: 12px;
-            color: #aaa;
-            line-height: 1.6;
-        }
-
-        .footer span {
-            color: #FF0000;
-            font-weight: 700;
+        /* Success flash */
+        @keyframes successFlash {
+            0%   { background: rgba(255,0,0,0.15); }
+            100% { background: var(--card); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
 
-        <div class="channel-badge">🔱 KaalAurKatha</div>
+    <div class="bg-grid"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="particles" id="particles"></div>
 
-        <div class="thumbnail-wrapper">
-            <div class="thumbnail-inner">
-                <div class="thumbnail-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M8,5V19L19,12L8,5Z"/>
-                    </svg>
-                </div>
-                <div class="thumbnail-title">Teen Ahankar. Ek Bhakt.</div>
-                <div class="thumbnail-sub">Hanuman • Garuda • Sudarshana • Satyabhama</div>
+    <div class="card" id="card">
+
+        <div class="icon-wrap">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="yt-circle">
+                <svg viewBox="0 0 24 24"><path d="M10,16.5V7.5L16,12M20,4.4C19.4,4.2 15.7,4 12,4C8.3,4 4.6,4.19 4,4.38C2.44,4.9 2,8.4 2,12C2,15.59 2.44,19.1 4,19.61C4.6,19.81 8.3,20 12,20C15.7,20 19.4,19.81 20,19.61C21.56,19.1 22,15.59 22,12C22,8.4 21.56,4.91 20,4.4Z"/></svg>
             </div>
         </div>
 
-        <h1>Watch Now on YouTube 🔥</h1>
-        <p class="subtitle">
-            Garuda poori speed se aaye.<br>
-            Hanuman pehle se wahan the. 🪶
-        </p>
+        <div class="badge"><span class="badge-dot"></span> New Short dropped</div>
 
-        <div id="loader-wrap" class="loader-wrap">
-            <div class="loader"></div>
-            <p class="loader-text">YouTube app khul raha hai...</p>
+        <h1>Watch<br>This <span>Short</span></h1>
+        <p class="subtitle">Opening automatically in 3 seconds…<br>or tap the button below 👇</p>
+
+        <div class="countdown-wrap">
+            <div class="countdown-label">Auto-opening in…</div>
+            <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
         </div>
 
-        <div id="buttons">
-            <a href="vnd.youtube://youtube.com/shorts/EwdlhWPx7AI"
-               class="btn btn-primary"
-               id="appLink">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                    <path d="M10,8.64L15.27,12L10,15.36V8.64M8,5V19L19,12L8,5Z"/>
-                </svg>
-                Open in YouTube App
+        <div id="mainButtons">
+            <a href="#" class="btn btn-primary" id="appBtn">
+                <span class="btn-emoji">🚀</span> Open in YouTube App
             </a>
-
-            <div class="divider">or</div>
-
-            <a href="https://youtube.com/shorts/EwdlhWPx7AI?si=Y5lnAZLUoaRQgr3w"
-               class="btn btn-secondary"
-               target="_blank"
-               id="browserLink">
-                🌐 Open in Browser
+            <a href="https://youtube.com/shorts/hslDUjM2Ltw?si=zkQw7ni2Ih00Ap_E" class="btn btn-ghost" target="_blank" id="browserBtn">
+                🌐 Open in Browser instead
             </a>
         </div>
 
-        <div class="info-box">
-            <strong>💡 Instagram Users — Important:</strong>
-            <p>
-                Instagram ka in-app browser YouTube app nahi khol sakta.
-                Neeche teen dots <strong>(⋯)</strong> tap karein aur
-                <strong>"Open in external browser"</strong> select karein
-                for the best experience.
-            </p>
+        <div class="opening-state" id="openingState">
+            <div class="spinner"></div>
+            <div class="opening-text">Launching YouTube…</div>
         </div>
 
-        <div class="footer">
-            <span>KaalAurKatha</span> — Hindu Mythological Stories<br>
-            Subscribe karo aur bell 🔔 dabao — Part 2 aa raha hai!
+        <div class="tip">
+            <strong>📌 Using Instagram?</strong> Tap the <strong>⋯</strong> menu at the bottom of the screen and choose <strong>"Open in external browser"</strong> — then hit the button above for the smoothest experience!
         </div>
-
     </div>
 
     <script>
-        const YOUTUBE_SHORT_URL = 'https://youtube.com/shorts/EwdlhWPx7AI?si=Y5lnAZLUoaRQgr3w';
-        const YOUTUBE_DEEP_LINK = 'vnd.youtube://youtube.com/shorts/EwdlhWPx7AI';
-        const YOUTUBE_DEEP_LINK_ALT = 'youtube://youtube.com/shorts/EwdlhWPx7AI';
+        // --- Particles ---
+        const pContainer = document.getElementById('particles');
+        for (let i = 0; i < 18; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.cssText = `
+                left: ${Math.random() * 100}%;
+                --dx: ${(Math.random() - 0.5) * 120}px;
+                width: ${2 + Math.random() * 4}px;
+                height: ${2 + Math.random() * 4}px;
+                animation-duration: ${4 + Math.random() * 6}s;
+                animation-delay: ${Math.random() * 6}s;
+                opacity: 0;
+            `;
+            pContainer.appendChild(p);
+        }
 
-        // Auto-attempt deep link on load
-        window.onload = function () {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-            const isInstagram = ua.indexOf('Instagram') > -1;
-            const isIOS = /iPad|iPhone|iPod/.test(ua);
-            const isAndroid = /android/i.test(ua);
+        // --- Deep link logic ---
+        const YT_APP   = 'vnd.youtube://www.youtube.com/shorts/hslDUjM2Ltw';
+        const YT_WEB   = 'https://youtube.com/shorts/hslDUjM2Ltw?si=zkQw7ni2Ih00Ap_E';
 
-            // Attempt silent deep link via iframe
-            setTimeout(function () {
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = isIOS ? YOUTUBE_DEEP_LINK : YOUTUBE_DEEP_LINK_ALT;
-                document.body.appendChild(iframe);
-                setTimeout(function () {
-                    document.body.removeChild(iframe);
-                }, 1500);
-            }, 600);
-        };
+        function openYouTube() {
+            document.getElementById('mainButtons').style.display = 'none';
+            document.getElementById('openingState').style.display = 'flex';
+            document.getElementById('card').style.animation = 'successFlash 0.4s ease forwards';
 
-        // App button click handler
-        document.getElementById('appLink').addEventListener('click', function (e) {
-            e.preventDefault();
+            // Try deep link
+            window.location.href = YT_APP;
 
-            const loaderWrap = document.getElementById('loader-wrap');
-            const buttons = document.getElementById('buttons');
-
-            loaderWrap.style.display = 'flex';
-            buttons.style.display = 'none';
-
-            // Try YouTube deep link
-            window.location.href = YOUTUBE_DEEP_LINK;
-
-            // Fallback after 2.5s — show buttons + open browser
-            setTimeout(function () {
-                loaderWrap.style.display = 'none';
-                buttons.style.display = 'block';
-                window.open(YOUTUBE_SHORT_URL, '_blank');
+            // Fallback to web after 2.5s
+            setTimeout(() => {
+                document.getElementById('openingState').style.display = 'none';
+                document.getElementById('mainButtons').style.display = 'block';
+                window.open(YT_WEB, '_blank');
             }, 2500);
+        }
+
+        // Auto-trigger after 3s
+        let autoTimer = setTimeout(openYouTube, 3000);
+
+        document.getElementById('appBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            clearTimeout(autoTimer);
+            openYouTube();
         });
 
-        // Browser button — just log
-        document.getElementById('browserLink').addEventListener('click', function () {
-            console.log('Opening in browser — KaalAurKatha');
+        document.getElementById('browserBtn').addEventListener('click', function() {
+            clearTimeout(autoTimer);
+        });
+
+        // Also try iframe trick on load for Instagram compatibility
+        window.addEventListener('load', function() {
+            const ua = navigator.userAgent;
+            if (/Instagram|FBAN|FBAV/.test(ua)) {
+                // Instagram detected — iframe nudge won't work well, show tip prominently
+                document.querySelector('.tip').style.background = 'rgba(255,0,0,0.08)';
+                document.querySelector('.tip').style.borderColor = 'rgba(255,0,0,0.25)';
+            }
         });
     </script>
 </body>
